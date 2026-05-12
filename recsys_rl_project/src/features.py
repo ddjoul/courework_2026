@@ -3,18 +3,14 @@ import pandas as pd
 
 
 class FeatureBuilder:
-    """
-    Преобразует сырые логи в признаки для contextual bandit / RL моделей.
-    """
-
     def __init__(self, history_size: int = 5):
         self.history_size = history_size
 
     def build_user_features(self, df: pd.DataFrame):
         """
-        Простые user features:
-        - средний reward
-        - активность
+        User features:
+        - mean reward
+        - activity
         """
         user_stats = df.groupby("user_id").agg(
             user_activity=("item_id_enc", "count"),
@@ -36,7 +32,7 @@ class FeatureBuilder:
 
     def build_state(self, user_history: list):
         """
-        State = последние N айтемов пользователя
+        State = the last N user's items
         """
         if len(user_history) < self.history_size:
             pad = [0] * (self.history_size - len(user_history))
@@ -46,7 +42,7 @@ class FeatureBuilder:
 
     def build_training_matrix(self, df: pd.DataFrame):
         """
-        Формирует (state, action, reward)-подобную структуру
+        Forms the structure (state, action, reward)
         """
         data = []
 

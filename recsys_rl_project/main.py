@@ -47,9 +47,8 @@ def run():
     os.makedirs("result/logs", exist_ok=True)
     os.makedirs("result/plots", exist_ok=True)
     
-    # -----------------------------
+    
     # Data
-    # -----------------------------
     print("Loading data...")
     df = load_data()
     df = clean_data(df)
@@ -61,15 +60,13 @@ def run():
     print(f"Total interactions: {len(df)}")
     print()
     
-    # -----------------------------
+    
     # Env
-    # -----------------------------
     env = RecommenderEnv(df)
     n_items = df["item_id_enc"].nunique()
     
-    # -----------------------------
+    
     # Models
-    # -----------------------------
     models = {
         "random": RandomModel(n_items),
         "popularity": PopularityRecommender(),
@@ -81,9 +78,8 @@ def run():
     results = {}
     total_models = len(models)
     
-    # -----------------------------
+    
     # Train & Evaluate
-    # -----------------------------
     print(f"Starting evaluation of {total_models} models...")
     print("=" * 60)
     
@@ -119,9 +115,8 @@ def run():
         elapsed_total = time.time() - start_total
         print(f"\n  Overall progress: {idx}/{total_models} models done ({elapsed_total:.0f}s elapsed)")
     
-    # -----------------------------
+    
     # Print results
-    # -----------------------------
     print("\n" + "=" * 60)
     print("FINAL RESULTS:")
     print("=" * 60)
@@ -131,9 +126,8 @@ def run():
     total_time = time.time() - start_total
     print(f"\nTotal execution time: {total_time:.0f}s ({total_time/60:.1f}min)")
     
-    # -----------------------------
+    
     # Plot results
-    # -----------------------------
     print("\nGenerating plots...")
     plot_start = time.time()
     
@@ -156,7 +150,6 @@ def run():
     plt.grid(True, alpha=0.3)
     plt.savefig("result/plots/reward_comparison.png", dpi=150, bbox_inches='tight')
     plt.close()
-    print("  ✓ reward_comparison.png")
     
     # Individual plots
     for name, res in results.items():
@@ -189,7 +182,6 @@ def run():
     plt.tight_layout()
     plt.savefig("result/plots/ctr_comparison.png", dpi=150, bbox_inches='tight')
     plt.close()
-    print("  ✓ ctr_comparison.png")
     
     print(f"Plots generated in {time.time() - plot_start:.1f}s")
     print("\nDone!")

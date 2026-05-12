@@ -3,22 +3,14 @@ import pandas as pd
 
 
 class RecommenderEnv:
-    """
-    Простая RL/Contextual Bandit среда для рекомендательной системы.
-
-    Идея:
-    - состояние = последние N айтемов пользователя
-    - действие = рекомендованный item
-    - награда = reward (played_ratio или shaped reward)
-    """
 
     def __init__(self, df: pd.DataFrame, history_size: int = 5):
         """
-        df должен содержать:
+        df:
         - user_id
         - item_id_enc
         - reward
-        - timestamp (желательно)
+        - timestamp
         """
         self.df = df.sort_values(["user_id", "timestamp"]).reset_index(drop=True)
         self.history_size = history_size
@@ -33,9 +25,7 @@ class RecommenderEnv:
 
         self.reset()
 
-    # -----------------------------
     # reset environment
-    # -----------------------------
     def reset(self, user_id=None):
         """
         Начинаем эпизод (по пользователю)
@@ -50,9 +40,7 @@ class RecommenderEnv:
 
         return self._get_state()
 
-    # -----------------------------
     # state = last N items
-    # -----------------------------
     def _get_state(self):
         history = self.user_df["item_id_enc"].values
 
@@ -64,9 +52,7 @@ class RecommenderEnv:
 
         return np.array(state, dtype=np.int32)
 
-    # -----------------------------
     # step function
-    # -----------------------------
     def step(self, action: int):
         """
         action = recommended item
@@ -91,22 +77,16 @@ class RecommenderEnv:
 
         return next_state, reward, done, {}
 
-    # -----------------------------
     # number of items (for agent)
-    # -----------------------------
     def get_action_space_size(self):
         return self.df["item_id_enc"].nunique()
 
-    # -----------------------------
     # sample random action
-    # -----------------------------
     def sample_action(self):
         return np.random.randint(0, self.get_action_space_size())
 
 
-# -----------------------------
 # quick sanity check
-# -----------------------------
 if __name__ == "__main__":
     from preprocessing import load_data, clean_data, sort_data, encode_ids, create_reward
 

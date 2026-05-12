@@ -8,9 +8,7 @@ CACHE_PATH = "data/raw/cache.csv"
 OUTPUT_PATH = "data/processed/preprocessed.csv"
 
 
-# -----------------------------
 # 1. Load data
-# -----------------------------
 def load_data(path: str = CACHE_PATH) -> pd.DataFrame:
     if not os.path.exists(path):
         raise FileNotFoundError(f"File not found: {path}")
@@ -19,9 +17,7 @@ def load_data(path: str = CACHE_PATH) -> pd.DataFrame:
     return df
 
 
-# -----------------------------
 # 2. Basic cleaning
-# -----------------------------
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     df = df.dropna()
     df = df.drop_duplicates()
@@ -33,18 +29,14 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-# -----------------------------
 # 3. Sort by time (important for RL)
-# -----------------------------
 def sort_data(df: pd.DataFrame) -> pd.DataFrame:
     if "timestamp" in df.columns:
         df = df.sort_values(["uid", "timestamp"]).reset_index(drop=True)
     return df
 
 
-# -----------------------------
 # 4. Encode users and items
-# -----------------------------
 def encode_ids(df: pd.DataFrame):
     user_enc = LabelEncoder()
     item_enc = LabelEncoder()
@@ -55,17 +47,13 @@ def encode_ids(df: pd.DataFrame):
     return df, user_enc, item_enc
 
 
-# -----------------------------
 # 5. Reward shaping (critical for RL)
-# -----------------------------
 def create_reward(df):
     df["reward"] = df["played_ratio_pct"] / 100.0
     return df
 
 
-# -----------------------------
 # 6. Train-test split (time-based per user)
-# -----------------------------
 def train_test_split(df: pd.DataFrame, test_ratio: float = 0.2):
     train_list = []
     test_list = []
@@ -84,10 +72,7 @@ def train_test_split(df: pd.DataFrame, test_ratio: float = 0.2):
     return train_df, test_df
 
 
-# -----------------------------
-# 7. Build RL dataset format
-# (state, action, reward)
-# -----------------------------
+# 7. Build RL dataset format (state, action, reward)
 def build_rl_format(df: pd.DataFrame, history_size: int = 5):
     data = []
 
@@ -112,9 +97,7 @@ def build_rl_format(df: pd.DataFrame, history_size: int = 5):
     return pd.DataFrame(data)
 
 
-# -----------------------------
 # 8. Pipeline
-# -----------------------------
 def run_pipeline():
     df = load_data()
     df = clean_data(df)
