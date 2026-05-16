@@ -111,7 +111,7 @@ def run():
         print(f"  {name} - CTR: {results[name]['ctr']:.4f}, Avg Reward: {results[name]['avg_reward']:.4f}")
         print(f"  Time: {model_time:.1f}s")
         
-        # Общий прогресс
+        # Overall progress
         elapsed_total = time.time() - start_total
         print(f"\n  Overall progress: {idx}/{total_models} models done ({elapsed_total:.0f}s elapsed)")
     
